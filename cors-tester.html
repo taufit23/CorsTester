@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CORS Tester - begl.saakti.id</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        
+        header p {
+            font-size: 0.95em;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .input-section {
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        input[type="text"],
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 4px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+        
+        input[type="text"]:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            padding: 12px 24px;
+            font-size: 1em;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            flex: 1;
+            min-width: 150px;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+            flex: 1;
+            min-width: 150px;
+        }
+        
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+        
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            color: #667eea;
+        }
+        
+        .spinner {
+            border: 4px solid #f0f0f0;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .results {
+            display: none;
+            margin-top: 30px;
+        }
+        
+        .result-box {
+            background: #f5f5f5;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        
+        .result-box h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+        
+        .result-box pre {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            padding: 15px;
+            overflow-x: auto;
+            font-size: 0.9em;
+            line-height: 1.5;
+            color: #333;
+        }
+        
+        .status-success {
+            border-left-color: #4caf50;
+            background: #f1f8f4;
+        }
+        
+        .status-error {
+            border-left-color: #f44336;
+            background: #fef5f4;
+        }
+        
+        .status-warning {
+            border-left-color: #ff9800;
+            background: #fff8f4;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+        
+        .badge-success {
+            background: #4caf50;
+            color: white;
+        }
+        
+        .badge-error {
+            background: #f44336;
+            color: white;
+        }
+        
+        .badge-info {
+            background: #2196f3;
+            color: white;
+        }
+        
+        .header-list {
+            display: grid;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        
+        .header-item {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 15px;
+            padding: 8px;
+            background: white;
+            border-radius: 3px;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .header-item strong {
+            color: #667eea;
+            word-break: break-all;
+        }
+        
+        .header-item code {
+            background: #f9f9f9;
+            padding: 4px 8px;
+            border-radius: 3px;
+            word-break: break-all;
+            font-size: 0.9em;
+        }
+        
+        .footer {
+            background: #f5f5f5;
+            border-top: 1px solid #e0e0e0;
+            padding: 20px 30px;
+            text-align: center;
+            color: #666;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔍 CORS Tester</h1>
+            <p>Uji CORS headers untuk domain/sub-domain Anda</p>
+        </header>
+        
+        <div class="content">
+            <div class="input-section">
+                <div class="form-group">
+                    <label for="domainInput">Domain/Sub-Domain:</label>
+                    <input 
+                        type="text" 
+                        id="domainInput" 
+                        placeholder="Contoh: http://api.example.com"
+                    >
+                </div>
+                
+                <div class="form-group">
+                    <label for="urlInput">URL Target:</label>
+                    <input 
+                        type="text" 
+                        id="urlInput" 
+                        placeholder="Masukkan URL untuk di-test"
+                    >
+                </div>
+                
+                <div class="form-group">
+                    <label for="methodSelect">Metode HTTP:</label>
+                    <select id="methodSelect">
+                        <option value="GET">GET</option>
+                        <option value="POST">POST</option>
+                        <option value="PUT">PUT</option>
+                        <option value="DELETE">DELETE</option>
+                        <option value="PATCH">PATCH</option>
+                    </select>
+                </div>
+                
+                <div class="button-group">
+                    <button class="btn-primary" onclick="ujiCORS()">Uji CORS (OPTIONS)</button>
+                    <button class="btn-primary" onclick="ujiPermintaan()">Uji Permintaan</button>
+                    <button class="btn-secondary" onclick="hapusHasil()">Hapus Hasil</button>
+                </div>
+            </div>
+            
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Menguji CORS headers...</p>
+            </div>
+            
+            <div class="results" id="results"></div>
+        </div>
+        
+        <div class="footer">
+            <p>CORS Tester v2.0 | Uji konfigurasi CORS untuk semua domain/sub-domain</p>
+        </div>
+    </div>
+    
+    <script>
+        async function ujiCORS() {
+            const domain = document.getElementById('domainInput').value.trim();
+            let url = document.getElementById('urlInput').value.trim();
+            
+            if (!domain) {
+                alert('Masukkan domain/sub-domain terlebih dahulu!');
+                return;
+            }
+            
+            if (!url) {
+                url = domain;
+            }
+            
+            tampilkanLoading(true);
+            
+            try {
+                const respon = await fetch(url, {
+                    method: 'OPTIONS',
+                    headers: {
+                        'Origin': domain,
+                        'Access-Control-Request-Method': document.getElementById('methodSelect').value,
+                        'Access-Control-Request-Headers': 'Content-Type',
+                    },
+                });
+                
+                tampilkanHasil(respon, 'Permintaan OPTIONS', domain);
+            } catch (error) {
+                tampilkanError(`Error testing ${url}: ${error.message}`);
+            } finally {
+                tampilkanLoading(false);
+            }
+        }
+        
+        async function ujiPermintaan() {
+            const domain = document.getElementById('domainInput').value.trim();
+            let url = document.getElementById('urlInput').value.trim();
+            
+            if (!domain) {
+                alert('Masukkan domain/sub-domain terlebih dahulu!');
+                return;
+            }
+            
+            if (!url) {
+                url = domain;
+            }
+            
+            tampilkanLoading(true);
+            
+            try {
+                const metode = document.getElementById('methodSelect').value;
+                const respon = await fetch(url, {
+                    method: metode,
+                    headers: {
+                        'Origin': domain,
+                        'Content-Type': 'application/json',
+                    },
+                });
+                
+                tampilkanHasil(respon, `Permintaan ${metode}`, domain);
+            } catch (error) {
+                tampilkanError(`Error testing ${url}: ${error.message}`);
+            } finally {
+                tampilkanLoading(false);
+            }
+        }
+        
+        function tampilkanHasil(respon, judul, domain) {
+            const divHasil = document.getElementById('results');
+            
+            const kelasStatus = respon.ok ? 'status-success' : 
+                               respon.status < 500 ? 'status-warning' : 'status-error';
+            
+            const corsOrigin = respon.headers.get('Access-Control-Allow-Origin');
+            const corsMetode = respon.headers.get('Access-Control-Allow-Methods');
+            const corsHeader = respon.headers.get('Access-Control-Allow-Headers');
+            const corsMaxAge = respon.headers.get('Access-Control-Max-Age');
+            const corsKredensial = respon.headers.get('Access-Control-Allow-Credentials');
+            
+            let statusCORS = '';
+            if (corsOrigin === '*') {
+                statusCORS = '<span class="badge badge-success">✓ CORS untuk SEMUA origin</span>';
+            } else if (corsOrigin === domain) {
+                statusCORS = `<span class="badge badge-success">✓ CORS diaktifkan untuk origin ini</span>`;
+            } else if (corsOrigin) {
+                statusCORS = `<span class="badge badge-warning">⚠ CORS diaktifkan untuk origin: ${corsOrigin}</span>`;
+            } else {
+                statusCORS = '<span class="badge badge-error">✗ CORS tidak dikonfigurasi</span>';
+            }
+            
+            let html = `
+                <div class="result-box ${kelasStatus}">
+                    <h3>${judul}</h3>
+                    <div>
+                        <strong>Origin yang ditest:</strong> ${domain}
+                    </div>
+                    <div>
+                        <strong>Status:</strong> ${respon.status} ${respon.statusText}
+                    </div>
+                    <div style="margin-top: 10px;">
+                        ${statusCORS}
+                    </div>
+                    
+                    <div class="header-list" style="margin-top: 15px;">
+            `;
+            
+            if (corsOrigin) {
+                html += `
+                    <div class="header-item">
+                        <strong>Access-Control-Allow-Origin:</strong>
+                        <code>${corsOrigin}</code>
+                    </div>
+                `;
+            }
+            
+            if (corsMetode) {
+                html += `
+                    <div class="header-item">
+                        <strong>Access-Control-Allow-Methods:</strong>
+                        <code>${corsMetode}</code>
+                    </div>
+                `;
+            }
+            
+            if (corsHeader) {
+                html += `
+                    <div class="header-item">
+                        <strong>Access-Control-Allow-Headers:</strong>
+                        <code>${corsHeader}</code>
+                    </div>
+                `;
+            }
+            
+            if (corsMaxAge) {
+                html += `
+                    <div class="header-item">
+                        <strong>Access-Control-Max-Age:</strong>
+                        <code>${corsMaxAge}s</code>
+                    </div>
+                `;
+            }
+            
+            if (corsKredensial) {
+                html += `
+                    <div class="header-item">
+                        <strong>Access-Control-Allow-Credentials:</strong>
+                        <code>${corsKredensial}</code>
+                    </div>
+                `;
+            }
+            
+            html += `<h4 style="margin-top: 15px; margin-bottom: 10px;">Semua Response Headers:</h4><pre>`;
+            
+            respon.headers.forEach((nilai, nama) => {
+                html += `${nama}: ${nilai}\n`;
+            });
+            
+            html += `</pre></div></div>`;
+            
+            divHasil.innerHTML = html;
+            divHasil.style.display = 'block';
+        }
+        
+        function tampilkanError(pesan) {
+            const divHasil = document.getElementById('results');
+            divHasil.innerHTML = `
+                <div class="result-box status-error">
+                    <h3>Error</h3>
+                    <p>${pesan}</p>
+                </div>
+            `;
+            divHasil.style.display = 'block';
+        }
+        
+        function tampilkanLoading(tunjukkan) {
+            document.getElementById('loading').style.display = tunjukkan ? 'block' : 'none';
+        }
+        
+        function hapusHasil() {
+            document.getElementById('results').style.display = 'none';
+            document.getElementById('results').innerHTML = '';
+        }
+        
+        document.getElementById('urlInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') ujiCORS();
+        });
+        
+        document.getElementById('domainInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') ujiCORS();
+        });
+    </script>
+</body>
+</html>
