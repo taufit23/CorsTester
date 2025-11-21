@@ -1,7 +1,3 @@
-# CORS Testing Scripts for http://begl.saakti.id
-
-Comprehensive collection of CORS (Cross-Origin Resource Sharing) testing tools for the domain `http://begl.saakti.id`.
-
 ## 📋 Scripts Included
 
 ### 1. **cors-test.js** - JavaScript/Node.js
@@ -110,10 +106,6 @@ Each script tests the following:
 
 3. **Multiple Endpoints**
 
-   - `http://begl.saakti.id`
-   - `http://begl.saakti.id/api`
-   - `http://begl.saakti.id/api/data`
-
 4. **Security Analysis** (in advanced-py)
    - Checks for overly permissive CORS settings
    - Validates credentials + wildcard origin combination
@@ -186,7 +178,7 @@ Access-Control-Allow-Methods: GET, POST
 
 ```
 ============================================================
-Testing CORS for: http://begl.saakti.id
+Testing CORS for Domain
 ============================================================
 
 Status Code: 200 OK
@@ -211,8 +203,6 @@ Edit the `endpoints` array in any script:
 
 ```python
 endpoints = [
-    'http://begl.saakti.id',
-    'http://begl.saakti.id/custom-api',
     # Add more...
 ]
 ```

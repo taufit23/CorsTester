@@ -1,6 +1,4 @@
-# CORS Tester untuk http://begl.saakti.id
-
-Kumpulan script untuk testing CORS (Cross-Origin Resource Sharing) pada domain `http://begl.saakti.id`.
+Kumpulan script untuk testing CORS (Cross-Origin Resource Sharing) pada domain.
 
 ---
 
@@ -31,7 +29,7 @@ pip install requests
 python cors-advanced.py
 
 # Akan diminta input:
-# Masukkan domain/sub-domain (contoh: http://api.example.com): http://begl.saakti.id
+# Masukkan domain/sub-domain (contoh: http://api.example.com):
 # Masukkan URL paths yang ingin di-test, dipisahkan koma (contoh: /api,/api/data,/v1/users): /api,/api/data,/health
 ```
 
@@ -94,18 +92,18 @@ Setiap script akan menampilkan:
 ```
 ======================================================================
 Tool Pengujian CORS Advanced
-Asal Origin: http://begl.saakti.id
+Asal Origin:
 URL paths: /api, /api/data, /health
 ======================================================================
 
 
 ========================================================================
-Testing: http://begl.saakti.id
+Testing:
 ========================================================================
 
 [PERMINTAAN PREFLIGHT]
 
-URL: http://begl.saakti.id
+URL:
 Request Type: OPTIONS (preflight for GET)
 Status Code: 204
 
